@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dr4at
+spec:
+  selector:
+    matchLabels:
+      app: dr4at
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: dr4at
+    spec:
+      containers:
+        - name: dr4at
+          image: dr4at:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
+          env:
+            - name: EUREKA_SERVER_URI
+              value: "http://eureka-server:8761/eureka/"
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:mysql://mysql:3306/teste.db"
+            - name: SPRING_DATASOURCE_USERNAME
+              value: "usuario"
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: "livre"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dr4at
+spec:
+  type: NodePort
+  ports:
+    - port: 8080
+      targetPort: 8080
+      nodePort: 31001  # Escolha uma porta entre 30000 e 32767
+  selector:
+    app: dr4at
+
+
