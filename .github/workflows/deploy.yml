@@ -23,7 +23,13 @@ jobs:
           java-version: '17'
 
       - name: Build with Maven
-        run: mvn clean compile
+        run: mvn clean package
 
       - name: Run tests
         run: mvn test
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: maven-build
+          path: target/*.jar
